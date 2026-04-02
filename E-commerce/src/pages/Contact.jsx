@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { FiMail, FiPhone, FiMapPin, FiSend } from "react-icons/fi";
+import { FiMail, FiPhone, FiMapPin, FiClock, FiSend } from "react-icons/fi";
+import toast from "react-hot-toast";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +9,19 @@ const Contact = () => {
     subject: "",
     message: "",
   });
+  const [sending, setSending] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSending(true);
+
+    // Simulate API call
+    setTimeout(() => {
+      toast.success("Message sent successfully! We'll get back to you soon.");
+      setFormData({ name: "", email: "", subject: "", message: "" });
+      setSending(false);
+    }, 1500);
+  };
 
   const handleChange = (e) => {
     setFormData({
@@ -16,122 +30,201 @@ const Contact = () => {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission
-    console.log("Form submitted:", formData);
-    alert("Message sent successfully!");
-    setFormData({ name: "", email: "", subject: "", message: "" });
-  };
+  const contactInfo = [
+    {
+      icon: FiMail,
+      title: "Email Us",
+      details: "support@shopease.com",
+      subDetails: "sales@shopease.com",
+      color: "bg-blue-100 text-blue-600",
+    },
+    {
+      icon: FiPhone,
+      title: "Call Us",
+      details: "+1 (555) 123-4567",
+      subDetails: "Mon-Fri, 9am-6pm EST",
+      color: "bg-green-100 text-green-600",
+    },
+    {
+      icon: FiMapPin,
+      title: "Visit Us",
+      details: "123 Commerce Street",
+      subDetails: "New York, NY 10001, USA",
+      color: "bg-purple-100 text-purple-600",
+    },
+  ];
 
   return (
-    <div className="container-custom py-12">
-      <h1 className="text-4xl font-bold text-center mb-12">Contact Us</h1>
+    <div className="max-w-7xl mx-auto px-4 py-12">
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>
+        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          Have questions? We'd love to hear from you. Send us a message and
+          we'll respond as soon as possible.
+        </p>
+      </div>
 
+      {/* Contact Info Cards */}
+      <div className="grid md:grid-cols-3 gap-6 mb-12">
+        {contactInfo.map((info, index) => {
+          const Icon = info.icon;
+          return (
+            <div
+              key={index}
+              className="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition"
+            >
+              <div
+                className={`w-12 h-12 ${info.color} rounded-full flex items-center justify-center mx-auto mb-4`}
+              >
+                <Icon className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">{info.title}</h3>
+              <p className="text-gray-600">{info.details}</p>
+              <p className="text-gray-500 text-sm">{info.subDetails}</p>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Contact Form & Map */}
       <div className="grid md:grid-cols-2 gap-12">
-        {/* Contact Information */}
-        <div>
-          <h2 className="text-2xl font-semibold mb-6">Get in Touch</h2>
-          <p className="text-gray-600 mb-8">
-            Have questions? We'd love to hear from you. Send us a message and
-            we'll respond as soon as possible.
-          </p>
-
-          <div className="space-y-6">
-            <div className="flex items-start space-x-4">
-              <FiMapPin className="text-2xl text-primary flex-shrink-0" />
-              <div>
-                <h3 className="font-semibold mb-1">Address</h3>
-                <p className="text-gray-600">
-                  123 Business Street
-                  <br />
-                  City, State 12345
-                  <br />
-                  United States
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-4">
-              <FiPhone className="text-2xl text-primary flex-shrink-0" />
-              <div>
-                <h3 className="font-semibold mb-1">Phone</h3>
-                <p className="text-gray-600">(555) 123-4567</p>
-                <p className="text-gray-600">Mon-Fri, 9am-6pm EST</p>
-              </div>
-            </div>
-
-            <div className="flex items-start space-x-4">
-              <FiMail className="text-2xl text-primary flex-shrink-0" />
-              <div>
-                <h3 className="font-semibold mb-1">Email</h3>
-                <p className="text-gray-600">info@shopease.com</p>
-                <p className="text-gray-600">support@shopease.com</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Contact Form */}
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <h2 className="text-2xl font-semibold mb-6">Send Message</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-2">Name</label>
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+            Send us a Message
+          </h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Your Name
+              </label>
               <input
                 type="text"
                 name="name"
+                required
                 value={formData.name}
                 onChange={handleChange}
-                required
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                placeholder="John Doe"
               />
             </div>
-
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-2">Email</label>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Email Address
+              </label>
               <input
                 type="email"
                 name="email"
+                required
                 value={formData.email}
                 onChange={handleChange}
-                required
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                placeholder="you@example.com"
               />
             </div>
-
-            <div className="mb-4">
-              <label className="block text-gray-700 mb-2">Subject</label>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Subject
+              </label>
               <input
                 type="text"
                 name="subject"
+                required
                 value={formData.subject}
                 onChange={handleChange}
-                required
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                placeholder="How can we help?"
               />
             </div>
-
-            <div className="mb-6">
-              <label className="block text-gray-700 mb-2">Message</label>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Message
+              </label>
               <textarea
                 name="message"
-                value={formData.message}
-                onChange={handleChange}
                 required
                 rows="5"
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              ></textarea>
+                value={formData.message}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                placeholder="Tell us about your inquiry..."
+              />
             </div>
-
             <button
               type="submit"
-              className="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition flex items-center justify-center space-x-2"
+              disabled={sending}
+              className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              <FiSend />
-              <span>Send Message</span>
+              {sending ? "Sending..." : "Send Message"} <FiSend />
             </button>
           </form>
+        </div>
+
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+            Business Hours
+          </h2>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b">
+              <div className="flex items-center gap-3">
+                <FiClock className="text-indigo-600" />
+                <span className="text-gray-600">Monday - Friday</span>
+              </div>
+              <span className="font-medium">9:00 AM - 6:00 PM</span>
+            </div>
+            <div className="flex items-center justify-between pb-3 border-b">
+              <div className="flex items-center gap-3">
+                <FiClock className="text-indigo-600" />
+                <span className="text-gray-600">Saturday</span>
+              </div>
+              <span className="font-medium">10:00 AM - 4:00 PM</span>
+            </div>
+            <div className="flex items-center justify-between pb-3 border-b">
+              <div className="flex items-center gap-3">
+                <FiClock className="text-indigo-600" />
+                <span className="text-gray-600">Sunday</span>
+              </div>
+              <span className="font-medium text-red-600">Closed</span>
+            </div>
+          </div>
+
+          <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+            <h3 className="font-semibold text-gray-900 mb-2">
+              Emergency Support
+            </h3>
+            <p className="text-gray-600 text-sm mb-2">
+              For urgent matters outside business hours, please email:
+            </p>
+            <a
+              href="mailto:emergency@shopease.com"
+              className="text-indigo-600 hover:text-indigo-700"
+            >
+              emergency@shopease.com
+            </a>
+          </div>
+
+          <div className="mt-6">
+            <h3 className="font-semibold text-gray-900 mb-2">Follow Us</h3>
+            <div className="flex space-x-4">
+              <a
+                href="#"
+                className="text-gray-400 hover:text-indigo-600 transition"
+              >
+                <FiFacebook size={24} />
+              </a>
+              <a
+                href="#"
+                className="text-gray-400 hover:text-indigo-600 transition"
+              >
+                <FiTwitter size={24} />
+              </a>
+              <a
+                href="#"
+                className="text-gray-400 hover:text-indigo-600 transition"
+              >
+                <FiInstagram size={24} />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

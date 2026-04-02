@@ -2,7 +2,7 @@ const express = require("express");
 const {
   register,
   registerAdmin,
-  devRegisterAdmin,
+  devCreateAdmin,
   login,
   getMe,
   updateMe,
@@ -17,9 +17,9 @@ router.post("/register", register);
 router.post("/register-admin", registerAdmin);
 router.post("/login", login);
 
-// Development only route
+// Development only route (no secret key needed)
 if (process.env.NODE_ENV !== "production") {
-  router.post("/dev-register-admin", devRegisterAdmin);
+  router.post("/dev-create-admin", devCreateAdmin);
 }
 
 // Protected routes (require authentication)

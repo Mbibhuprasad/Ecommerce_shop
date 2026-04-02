@@ -20,6 +20,38 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
+// Admin registration
+exports.registerAdmin = async (req, res, next) => {
+  try {
+    const { name, email, password, adminSecretKey } = req.body;
+
+    console.log("Received adminSecretKey:", adminSecretKey);
+    console.log("Expected key:", process.env.ADMIN_SECRET_KEY);
+    console.log("Keys match:", adminSecretKey === process.env.ADMIN_SECRET_KEY);
+
+    if (!adminSecretKey || adminSecretKey !== process.env.ADMIN_SECRET_KEY) {
+      return next(new AppError("Invalid admin registration key", 403));
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return next(new AppError("Admin already exists with this email", 400));
+    }
+
+    const admin = await User.create({
+      name,
+      email,
+      password,
+      role: "admin",
+      isVendorApproved: true,
+    });
+
+    createSendToken(admin, 201, res);
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Regular user registration
 exports.register = async (req, res, next) => {
   try {
@@ -37,7 +69,6 @@ exports.register = async (req, res, next) => {
       role: role || "user",
     });
 
-    // If registering as vendor, create vendor application
     if (role === "vendor") {
       await VendorApplication.create({
         user: user._id,
@@ -55,46 +86,7 @@ exports.register = async (req, res, next) => {
   }
 };
 
-// Admin registration (protected with admin creation key)
-exports.registerAdmin = async (req, res, next) => {
-  try {
-    const { name, email, password, adminSecretKey } = req.body;
-
-    // Verify admin secret key from .env file
-    if (!adminSecretKey || adminSecretKey !== process.env.ADMIN_SECRET_KEY) {
-      return next(new AppError("Invalid admin registration key", 403));
-    }
-
-    // Check if admin already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return next(new AppError("Admin already exists with this email", 400));
-    }
-
-    // Check if this is the first admin (optional: allow only one super admin)
-    const adminCount = await User.countDocuments({ role: "admin" });
-    if (adminCount > 0 && !req.body.forceCreate) {
-      return next(
-        new AppError("Admin already exists. Only one admin allowed.", 400),
-      );
-    }
-
-    // Create admin user
-    const admin = await User.create({
-      name,
-      email,
-      password,
-      role: "admin",
-      isVendorApproved: true, // Admin doesn't need vendor approval
-    });
-
-    createSendToken(admin, 201, res);
-  } catch (error) {
-    next(error);
-  }
-};
-
-// Login for all user types (user, vendor, admin)
+// Login
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -109,7 +101,6 @@ exports.login = async (req, res, next) => {
       return next(new AppError("Invalid email or password", 401));
     }
 
-    // Check if vendor is approved
     if (user.role === "vendor" && !user.isVendorApproved) {
       return next(
         new AppError(
@@ -133,6 +124,37 @@ exports.getMe = async (req, res, next) => {
       status: "success",
       data: { user },
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Development only - Create admin without key
+exports.devCreateAdmin = async (req, res, next) => {
+  try {
+    const { name, email, password } = req.body;
+
+    if (process.env.NODE_ENV === "production") {
+      return next(
+        new AppError("This endpoint is not available in production", 403),
+      );
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return next(new AppError("Admin already exists with this email", 400));
+    }
+
+    const admin = await User.create({
+      name,
+      email,
+      password,
+      role: "admin",
+      isVendorApproved: true,
+    });
+
+    console.log("✅ Admin created via dev endpoint:", admin.email);
+    createSendToken(admin, 201, res);
   } catch (error) {
     next(error);
   }
@@ -237,34 +259,6 @@ exports.deleteAdmin = async (req, res, next) => {
       status: "success",
       data: null,
     });
-  } catch (error) {
-    next(error);
-  }
-};
-// Development only - Create admin without key (remove in production)
-exports.devRegisterAdmin = async (req, res, next) => {
-  try {
-    const { name, email, password } = req.body;
-
-    if (process.env.NODE_ENV === 'production') {
-      return next(new AppError("This endpoint is not available in production", 403));
-    }
-
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return next(new AppError("Admin already exists with this email", 400));
-    }
-
-    const admin = await User.create({
-      name,
-      email,
-      password,
-      role: "admin",
-      isVendorApproved: true,
-    });
-
-    console.log("Admin created via dev endpoint:", admin.email);
-    createSendToken(admin, 201, res);
   } catch (error) {
     next(error);
   }

@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Routes
+// Routes - MAKE SURE THESE PATHS ARE CORRECT
 app.use("/api/auth", require("./routes/authroutes"));
 app.use("/api/vendors", require("./routes/vendorRoutes"));
 app.use("/api/categories", require("./routes/categoryRoutes"));
@@ -30,4 +30,5 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV}`);
 });
