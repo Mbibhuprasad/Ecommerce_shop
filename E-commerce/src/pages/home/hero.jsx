@@ -1,85 +1,139 @@
-// Hero.jsx
+// src/components/home/HeroSection.jsx
 import React from "react";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { FiShoppingBag, FiArrowRight } from "react-icons/fi";
 
-const Hero = () => {
+const HeroSection = () => {
   return (
-    <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-blue-50">
-      {/* Animated Background Glossy Orbs */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+    <div className="relative bg-gradient-to-r from-green-600 to-emerald-700 overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 1px)`,
+            backgroundSize: "40px 40px",
+          }}
+        ></div>
       </div>
 
-      {/* Main Content */}
-      <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8">
-        {/* Glossy Card Effect */}
-        <div className="backdrop-blur-lg bg-white/30 rounded-2xl p-8 md:p-12 shadow-2xl border border-white/40 inline-block">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-900 to-blue-600">
-            Welcome to Our Store
-          </h1>
-          <p className="mt-4 text-lg sm:text-xl text-blue-900/80 max-w-2xl">
-            Discover elegance and innovation. Experience shopping like never
-            before with our premium collection.
-          </p>
-          <div className="mt-8 flex gap-4 justify-center">
-            <button className="px-8 py-3 bg-gradient-to-r from-blue-700 to-blue-900 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 backdrop-blur-sm">
-              Shop Now
-            </button>
-            <button className="px-8 py-3 bg-white/40 backdrop-blur-sm text-blue-900 rounded-full font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border border-white/60">
-              Learn More
-            </button>
-          </div>
+      <div className="relative max-w-7xl mx-auto px-4 py-20 md:py-28 lg:py-32">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          {/* Left Content */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.6 }}
+            >
+              <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm font-semibold mb-4">
+                Welcome to ShopHub
+              </span>
+            </motion.div>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight"
+            >
+              Discover Amazing Products at{" "}
+              <span className="text-yellow-300">Best Prices</span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.6 }}
+              className="text-white text-lg mb-8 opacity-90"
+            >
+              Shop thousands of products from trusted vendors. Get the best
+              deals, fast shipping, and secure payments all in one place.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              className="flex flex-col sm:flex-row gap-4"
+            >
+              <Link
+                to="/products"
+                className="inline-flex items-center justify-center px-6 py-3 bg-white text-green-600 rounded-lg font-semibold hover:bg-gray-100 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 duration-200"
+              >
+                <FiShoppingBag className="mr-2" />
+                Shop Now
+                <FiArrowRight className="ml-2" />
+              </Link>
+              <Link
+                to="/about"
+                className="inline-flex items-center justify-center px-6 py-3 bg-transparent border-2 border-white text-white rounded-lg font-semibold hover:bg-white hover:text-green-600 transition duration-200"
+              >
+                Learn More
+              </Link>
+            </motion.div>
+
+            {/* Stats */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.7, duration: 0.6 }}
+              className="grid grid-cols-3 gap-8 mt-12 pt-8 border-t border-white/20"
+            >
+              {[
+                { label: "Happy Customers", value: "50K+" },
+                { label: "Products", value: "10K+" },
+                { label: "Vendors", value: "500+" },
+              ].map((stat, index) => (
+                <div key={index}>
+                  <div className="text-2xl font-bold text-white">
+                    {stat.value}
+                  </div>
+                  <div className="text-white/80 text-sm">{stat.label}</div>
+                </div>
+              ))}
+            </motion.div>
+          </motion.div>
+
+          {/* Right Content - Hero Image */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            className="relative"
+          >
+            <div className="relative z-10">
+              <img
+                src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=500&h=500&fit=crop"
+                alt="Shopping"
+                className="rounded-2xl shadow-2xl"
+              />
+              {/* Floating Badges */}
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ repeat: Infinity, duration: 2 }}
+                className="absolute -top-5 -left-5 bg-white rounded-lg shadow-lg p-3"
+              >
+                <div className="text-green-600 font-bold">Free Shipping</div>
+              </motion.div>
+              <motion.div
+                animate={{ y: [0, 10, 0] }}
+                transition={{ repeat: Infinity, duration: 2.5 }}
+                className="absolute -bottom-5 -right-5 bg-yellow-500 rounded-lg shadow-lg p-3"
+              >
+                <div className="text-white font-bold">Up to 70% OFF</div>
+              </motion.div>
+            </div>
+          </motion.div>
         </div>
       </div>
-
-      {/* Decorative Bottom Wave */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
-        <svg
-          className="relative block w-full h-20 md:h-32"
-          viewBox="0 0 1200 120"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"
-            fill="white"
-            opacity="0.8"
-          ></path>
-          <path
-            d="M0,0V15.81C13,21.25,27.93,25.67,44.24,28.45c69.76,13.23,140.79,7.08,210.07-6.47,79.72-15.56,156.91-37.91,237.67-40.49C554.79,4.2,632.75,22.54,710.2,39.22c77.2,16.6,153.81,23.55,231.38,15.92,43.57-4.28,85.31-14.32,126.42-25.79V0Z"
-            fill="white"
-            opacity="0.5"
-          ></path>
-        </svg>
-      </div>
-
-      <style jsx>{`
-        @keyframes blob {
-          0% {
-            transform: translate(0px, 0px) scale(1);
-          }
-          33% {
-            transform: translate(30px, -50px) scale(1.1);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-          100% {
-            transform: translate(0px, 0px) scale(1);
-          }
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-      `}</style>
     </div>
   );
 };
 
-export default Hero;
+export default HeroSection;

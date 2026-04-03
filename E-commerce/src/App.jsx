@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import { CartProvider } from "./context/CartContext"; // ✅ ADD THIS - Cart provider for cart functionality
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AuthModal from "./components/AuthModal";
@@ -36,7 +37,9 @@ import AdminOrders from "./pages/admin/AdminOrders";
 
 function App() {
   return (
-    <>
+    <CartProvider>
+      {" "}
+      {/* ✅ ADD THIS - Wrap everything with CartProvider */}
       <Toaster position="top-right" />
       <div className="flex flex-col min-h-screen">
         <Navbar />
@@ -129,7 +132,7 @@ function App() {
         </main>
         <Footer />
       </div>
-    </>
+    </CartProvider>
   );
 }
 
